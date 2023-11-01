@@ -1,6 +1,9 @@
 import { useState } from "react";
 
-function Square({value, onSquareClick}) {
+function Square({value, onSquareClick, isWinSquare}) {
+  if (isWinSquare) {
+    return <button className="square-win" onClick={onSquareClick}>{value}</button>;
+  }
   return <button className="square" onClick={onSquareClick}>{value}</button>;
 }
 
@@ -17,7 +20,8 @@ function Board({xIsNext, squares, onPlay}) {
     onPlay(nextSquares);
   }
 
-  const winner = calculateWinner(squares);
+  const winner = (calculateWinner(squares) ? calculateWinner(squares).winner : null);
+  const winnerLine = (calculateWinner(squares) ? calculateWinner(squares).winLine : null);
   let status;
   if (winner) {
     status = "Winner: " + winner;
@@ -31,7 +35,12 @@ function Board({xIsNext, squares, onPlay}) {
       let boardRow = [];
 
       for (let i = row * 3; i < (row + 1) * 3; i++) {
-          boardRow.push(<Square key={i} value={squares[i]} onSquareClick={() => handleClick(i)}/>);
+          if (winnerLine && winnerLine.includes(i)) {
+            boardRow.push(<Square key={i} value={squares[i]} 
+                            onSquareClick={() => handleClick(i)} isWinSquare={true}/>);
+          } else {
+            boardRow.push(<Square key={i} value={squares[i]} onSquareClick={() => handleClick(i)}/>);
+          }
       };
       boardSquares.push(<div className="board-row" key={row}>{boardRow}</div>);
   };
@@ -49,6 +58,10 @@ export default function Game() {
   const [sortState, setSortState] = useState("ASC"); 
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
+  const sortMethods = {
+    "ASC": undefined,
+    "DESC": (a, b) => (a > b ? 1 : -1)
+  };
 
   function handlePlay(nextSquares) {
       const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -86,7 +99,7 @@ export default function Game() {
         </li>
       )
     };
-    
+
     if (move === currentMove && move === 0) {
       return moveType.start;
     } else if (move === currentMove) {
@@ -95,11 +108,6 @@ export default function Game() {
     return moveType.other;
   })
 
-  const sortMethods = {
-    "ASC": undefined,
-    "DESC": (a, b) => (a > b ? 1 : -1)
-  };
-
   return (
     <>
         <div className="game">
@@ -107,12 +115,14 @@ export default function Game() {
                 <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
             </div>
             <div className="game-info">
-              <button onClick={() => setSortState(sortState === "ASC" ? "DESC" : "ASC")}>
+              <button className="game-sort-button" 
+                onClick={() => setSortState(sortState === "ASC" ? "DESC" : "ASC")}
+              >
                 Sort
               </button>
-              <ol>
+              <ul>
                 {moves.sort(sortMethods[sortState])}
-                </ol>
+              </ul>
             </div>
         </div>
     </>
@@ -135,7 +145,12 @@ function calculateWinner(squares) {
     const [a, b, c] = lines[i];
 
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c])
-      return squares[a];
+      return (
+        {
+          "winner": squares[a],
+          "winLine": lines[i]
+        }
+      )
   }
   return null;
 }

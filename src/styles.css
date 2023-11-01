@@ -75,6 +75,21 @@ button {
   width: 34px;
 }
 
+.square-win {
+  background: lightgreen;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
 .board-row:after {
   clear: both;
   content: '';
@@ -101,4 +116,8 @@ button {
   font-size: 15px;
   margin-top: 5px;
   color: darkred;
+}
+
+.game-sort-button {
+  margin-left: 20px;
 }
