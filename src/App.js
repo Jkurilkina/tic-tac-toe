@@ -31,9 +31,9 @@ function Board({xIsNext, squares, onPlay}) {
       let boardRow = [];
 
       for (let i = row * 3; i < (row + 1) * 3; i++) {
-          boardRow.push(<Square value={squares[i]} onSquareClick={() => handleClick(i)}/>);
+          boardRow.push(<Square key={i} value={squares[i]} onSquareClick={() => handleClick(i)}/>);
       };
-      boardSquares.push(<div className="board-row">{boardRow}</div>);
+      boardSquares.push(<div className="board-row" key={row}>{boardRow}</div>);
   };
   return (
       <>
@@ -46,6 +46,7 @@ function Board({xIsNext, squares, onPlay}) {
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
+  const [sortState, setSortState] = useState("ASC"); 
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
 
@@ -67,19 +68,37 @@ export default function Game() {
     } else {
       description = "Go to start";
     }
-    if (move === currentMove) {
-      return (
+
+    const moveType = {
+      start: (
+        <li className="game-current-move" key={move}>
+          <div>You are at start</div>
+        </li>
+      ),
+      current: (
         <li className="game-current-move" key={move}>
           <div>You are at move №{move}</div>
         </li>
-      )
-    }
-    return (
+      ),
+      other: (
         <li className="game-move" key={move}>
           <button onClick={() => jumpTo(move)}>{description}</button>
         </li>
-    );
+      )
+    };
+    
+    if (move === currentMove && move === 0) {
+      return moveType.start;
+    } else if (move === currentMove) {
+      return moveType.current;
+    }
+    return moveType.other;
   })
+
+  const sortMethods = {
+    "ASC": undefined,
+    "DESC": (a, b) => (a > b ? 1 : -1)
+  };
 
   return (
     <>
@@ -88,7 +107,12 @@ export default function Game() {
                 <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
             </div>
             <div className="game-info">
-              <ol>{moves}</ol>
+              <button onClick={() => setSortState(sortState === "ASC" ? "DESC" : "ASC")}>
+                Sort
+              </button>
+              <ol>
+                {moves.sort(sortMethods[sortState])}
+                </ol>
             </div>
         </div>
     </>
