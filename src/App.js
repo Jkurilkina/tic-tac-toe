@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function Square({value, onSquareClick, isWinSquare}) {
   if (isWinSquare) {
-    return <button className="square-win" onClick={onSquareClick}>{value}</button>;
+    return <button className="square win" onClick={onSquareClick}>{value}</button>;
   }
   return <button className="square" onClick={onSquareClick}>{value}</button>;
 }
@@ -23,8 +23,11 @@ function Board({xIsNext, squares, onPlay}) {
   const winner = (calculateWinner(squares) ? calculateWinner(squares).winner : null);
   const winnerLine = (calculateWinner(squares) ? calculateWinner(squares).winLine : null);
   let status;
+
   if (winner) {
     status = "Winner: " + winner;
+  } else if (!squares.includes(null)) {
+    status = "It's a Draw!"
   } else {
     status = "Next player is " + (xIsNext ? "X" : "O");
   }
@@ -116,8 +119,7 @@ export default function Game() {
             </div>
             <div className="game-info">
               <button className="game-sort-button" 
-                onClick={() => setSortState(sortState === "ASC" ? "DESC" : "ASC")}
-              >
+                onClick={() => setSortState(sortState === "ASC" ? "DESC" : "ASC")}>
                 Sort
               </button>
               <ul>
