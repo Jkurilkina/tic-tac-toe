@@ -95,12 +95,17 @@ export default function Game() {
 
     const moveType = {
       start: (
-        <li className="game-current-move" key={move}>
+        <li className="game-current-move start-move" key={move}>
           <div>You are at start</div>
         </li>
       ),
-      current: (
-        <li className="game-current-move" key={move}>
+      currentX: (
+        <li className="game-current-move value-x" key={move}>
+          <div>You are at move №{move}</div>
+        </li>
+      ),
+      currentO: (
+        <li className="game-current-move value-o" key={move}>
           <div>You are at move №{move}</div>
         </li>
       ),
@@ -113,9 +118,11 @@ export default function Game() {
 
     if (move === currentMove && move === 0) {
       return moveType.start;
-    } else if (move === currentMove) {
-      return moveType.current;
-    }
+    } else if (move === currentMove && move % 2 !== 0) {
+      return moveType.currentX;
+    } else if (move === currentMove && move % 2 === 0) {
+      return moveType.currentO;
+    } 
     return moveType.other;
   })
 
