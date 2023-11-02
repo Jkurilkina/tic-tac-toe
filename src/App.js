@@ -4,7 +4,15 @@ function Square({value, onSquareClick, isWinSquare}) {
   if (isWinSquare) {
     return <button className="square win" onClick={onSquareClick}>{value}</button>;
   }
-  return <button className="square" onClick={onSquareClick}>{value}</button>;
+  switch (value) {
+    case "X":
+      return <button className="square value-x" onClick={onSquareClick}>{value}</button>;
+    case "O":
+      return <button className="square value-o" onClick={onSquareClick}>{value}</button>;
+    default:
+      return <button className="square" onClick={onSquareClick}>{value}</button>;
+  }
+  
 }
 
 function Board({xIsNext, squares, onPlay}) {

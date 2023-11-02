@@ -2,12 +2,6 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: sans-serif;
-  margin: 20px;
-  padding: 0;
-}
-
 h1 {
   margin-top: 0;
   font-size: 22px;
@@ -51,18 +45,20 @@ ul {
 }
 
 body {
-  font-family: sans-serif;
+  font-family:'Courier New', Courier, monospace;
   margin: 20px;
   padding: 0;
 }
 
 button {
   font-size: 15px;
+  font-family:'Courier New', Courier, monospace;
 }
 
 .square {
   background: #fff;
   border: 1px solid #999;
+  border-radius: 20%;
   float: left;
   font-size: 24px;
   font-weight: bold;
@@ -77,6 +73,14 @@ button {
 
 .win {
   background: lightgreen;
+}
+
+.value-x {
+  background-color: aquamarine;
+}
+
+.value-o {
+  background-color: pink;
 }
 
 .board-row:after {
